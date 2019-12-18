@@ -38,6 +38,12 @@ const buildQuery = (criteria) => {
 
     const query = {};
 
+    if (criteria.name) {
+        // before we did this all the time Users.find({ name: 'joe' });
+        // time to find a different way with mongo operators
+        query.$text = { $search: criteria.name };
+    };
+    
     if (criteria.age) {
         query.age = {
             $gte: criteria.age.min,
