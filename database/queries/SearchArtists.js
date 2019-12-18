@@ -11,8 +11,10 @@ const Artist = require('../models/artist');
 module.exports = (criteria, sortProperty, offset = 0, limit = 20) => {
     // write a query that will follow sort, offset, limit options only
     // it should look like this: { all: [artist], count: count, offset: offset, limit: limit }
+    
+    // console.log(criteria);
 
-    const query = Artist.find({})
+    const query = Artist.find(buildQuery(criteria))
         // to string interpolate an object key
         .sort({ [sortProperty]: 1 })
         .skip(offset)
@@ -27,4 +29,21 @@ module.exports = (criteria, sortProperty, offset = 0, limit = 20) => {
                 limit: limit 
             }
         });
+};
+
+// reading desire search results
+const buildQuery = (criteria) => {
+    // initially, criteria obejct only has a 'name' property
+    console.log(criteria);
+
+    const query = {};
+
+    if (criteria.age) {
+        query.age = {
+            $gte: criteria.age.min,
+            $lte: criteria.age.max
+        };
+    };
+
+    return query;
 };
